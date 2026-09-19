@@ -1,7 +1,9 @@
-import { useRef } from 'react'
-import   gsap from 'gsap'
+import { useRef, useEffect, useState } from 'react'
+import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'                    
+import { client } from '../sanity/sanityClient'
+import imageUrlBuilder from '@sanity/image-url'
 import '../css/home.css'
 import Features from '../components/Features'
 import { Link } from 'react-router-dom'
@@ -9,9 +11,47 @@ import { Link } from 'react-router-dom'
 // Register plugins outside the component
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
+import { createImageUrlBuilder } from '@sanity/image-url' // Updated import
+
+// Initialize using createImageUrlBuilder instead
+const builder = createImageUrlBuilder(client)
+const urlFor = (source) => builder.image(source)
+
 function Home() {
   const containerRef = useRef()
-   
+  const [homeData, setHomeData] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+useEffect(() => {
+  const query = `*[_type == "home"][0]{
+    ...,
+    "featuresList": featuresList[]{
+      ...,
+      // If feature heading is empty, fall back to the linked post's title
+      "heading": coalesce(heading, linkedPost->title),
+      
+      // If feature text is empty, fall back to the linked post's excerpt 
+      "text": coalesce(text, linkedPost->excerpt),
+
+      // Fall back feature image to the linked post's main image if missing
+      "image": coalesce(image, linkedPost->mainImage),
+      
+      // Also grab the post's slug so you can build the dynamic link path!
+      "postId": linkedPost->_id
+    }
+  }`;
+
+  client.fetch(query)
+    .then((data) => {
+      setHomeData(data)
+      setLoading(false)
+    })
+    .catch((err) => {
+      console.error('Failed to fetch home data:', err)
+      setLoading(false)
+    })
+}, [])
+
   useGSAP(
     () => {
       // 1. Add body class
@@ -50,8 +90,11 @@ function Home() {
         document.body.classList.remove('js-enabled')
       }
     },
-    { scope: containerRef } // Scopes selectors like .sun-glow-wrapper to this container
+    { scope: containerRef}
   )
+  const heroImageSrc = homeData?.heroImage 
+    ? urlFor(homeData.heroImage).url() 
+    : ' '
 
   return (
     <>
@@ -60,7 +103,7 @@ function Home() {
         <div className="hero-image-wrapper">
           <img
             className="hero-image"
-            src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789204380/muttajahSite/johannes-plenio-bhCdwWNmXw8-unsplash_wcpy8n.jpg'
+            src={heroImageSrc}
             alt="Hero background visual"
           />
 
@@ -94,14 +137,22 @@ function Home() {
         </div>
 
         <div className="hero-content">
-          <h1 className="hero-title">Advunture</h1>
-          <p>Discover the world with us and decide your next intended path</p>
-          {/* <button className="hero-button">Start Discovering</button> */}
-          <Link className="hero-button" to="/posts">Start Discovering</Link>
+          <h1 className="hero-title">
+            {homeData?.heroHeading || 'Advunture'}
+          </h1>
+          <p>
+            {homeData?.heroText || 'Discover the world with us and decide your next intended path'}
+          </p>
+          <Link 
+            className="hero-button"
+            to={homeData?.heroCtaLink || '/posts'}
+          >
+            {homeData?.heroCtaText || 'Start Discovering'}
+          </Link>
         </div>
       </section>
     </div>
-    <Features/>
+    <Features data={homeData} />
     </>
   )
 }

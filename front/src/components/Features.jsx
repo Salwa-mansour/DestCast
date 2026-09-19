@@ -1,25 +1,25 @@
-
 import { useRef } from 'react'
-import   gsap from 'gsap'
+import gsap from 'gsap'
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin'                   
-import rainLottieData from '../assets/Lottie/Rain.json';
-import snowLottieData from '../assets/Lottie/snow fall.json';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin'                 
+import { Link } from 'react-router-dom'
+import { createImageUrlBuilder } from '@sanity/image-url'
+import { client } from '../sanity/sanityClient' // Adjust path if needed to match your project
+
 import '../css/features.css'
 
-
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, useGSAP)
-// Initialize Cloudinary instance outside component
 
-function Features() {
+const builder = createImageUrlBuilder(client)
+const urlFor = (source) => builder.image(source)
+
+function Features({data}) {
      const containerRef = useRef()
      const headingRef = useRef(null);
-     const rainLottieRef = useRef(null);
-     const snowLottieRef = useRef(null);
-          
+   
         useGSAP(() => {
 
           gsap.from(headingRef.current.children, {
@@ -229,11 +229,11 @@ const mobileAnimations = () => {
       const allFeatures = gsap.utils.toArray(".features .feature");
       console.log(allFeatures)
       // --- Inset Layout Logic ---
-      gsap.set(allFeatures[0], { top: "12%", right: "15%", left: "auto" });
-      gsap.set(allFeatures[1], { top: "30%", left: "10%", right: "auto" });
-      gsap.set(allFeatures[2], { top: "50%", right: "10%", left: "auto" });
-      gsap.set(allFeatures[3], { top: "70%", left: "10%", right: "auto" });
-      gsap.set(allFeatures[4], { top: "87%", right: "10%", left: "auto" });
+      gsap.set(allFeatures[0], { top: "10%", right: "15%", left: "auto" });
+      gsap.set(allFeatures[1], { top: "23%", left: "10%", right: "auto" });
+      gsap.set(allFeatures[2], { top: "45%", right: "10%", left: "auto" });
+      gsap.set(allFeatures[3], { top: "67%", left: "10%", right: "auto" });
+      gsap.set(allFeatures[4], { top: "82%", right: "10%", left: "auto" });
 
       // --- Directional ScrollTrigger Loop ---
       allFeatures.forEach((feature, index) => {
@@ -449,10 +449,10 @@ bindScrollToLabels(allFeatures[3], "rainyStart", "rainyEnd", {
   return (
     <>
     <section className="features" ref={containerRef} >
-    <div className="section-heading" ref={headingRef} >
-        <h1>featers</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum, quae.</p>
-    </div>
+      <div className="section-heading" ref={headingRef} >
+        <h2>{data?.featuresHeading }</h2>
+        <p>{data?.featuresSubheading }</p>
+      </div>
      <div className="background">
     <svg width="50" height="1750" viewBox="0 0 50 1750" xmlns="http://www.w3.org/2000/svg" className="line-path">
         <path 
@@ -547,49 +547,78 @@ bindScrollToLabels(allFeatures[3], "rainyStart", "rainyEnd", {
 
    
   </div>  {/*Properly close background wrapper here */}
-    <div className='features-container'>
-   {/* Feature cards sit inside .features alongside .background  */}
+<div className='features-container'>
+  {/* Feature 1 */}
   <div className="feature sunny-feature">
-  
-  <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789199374/muttajahSite/stephen-crane-hPuCMQLiZ8U-unsplash_ljum9m.jpg' />
+    <img src={data?.featuresList?.[0]?.image ? urlFor(data.featuresList[0].image).url() : 'https://res.cloudinary.com/du6d1qifw/image/upload/v1789199374/muttajahSite/stephen-crane-hPuCMQLiZ8U-unsplash_ljum9m.jpg'} alt="Feature 1" />
     <div className="feature-content">
-      <h2>Feature 1</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h2>{data?.featuresList?.[0]?.heading || 'Feature 1'}</h2>
+      <p>{data?.featuresList?.[0]?.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}</p>
     </div>
+     <Link
+        to={`/post/${data?.featuresList?.[0]?.postId}`}
+        title="read more"
+        className="card-link"
+      ></Link>
   </div>
 
+  {/* Feature 2 */}
   <div className="feature cloud-sun-feature">
-    <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789203541/muttajahSite/david-becker-6BPmpe2o1aw-unsplash_muo5dk.jpg' alt="Feature 2" width="300" />
+    <img src={data?.featuresList?.[1]?.image ? urlFor(data.featuresList[1].image).url() : 'https://res.cloudinary.com/du6d1qifw/image/upload/v1789203541/muttajahSite/david-becker-6BPmpe2o1aw-unsplash_muo5dk.jpg'} alt="Feature 2" width="300" />
     <div className="feature-content">
-      <h2>Feature 2</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h2>{data?.featuresList?.[1]?.heading || 'Feature 2'}</h2>
+      <p>{data?.featuresList?.[1]?.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}</p>
     </div>
+     <Link
+        to={`/post/${data?.featuresList?.[1]?.postId}`}
+        title="read more"
+        className="card-link"
+      ></Link>
   </div>
 
+  {/* Feature 3 (Fallback safely if data has fewer items) */}
   <div className="feature cloudy-feature">
-    <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789199406/muttajahSite/soma-laszlo-rt4SRyA29TE-unsplash_rwfwii.jpg' alt="Feature 3" width="300" />
+    <img src={data?.featuresList?.[2]?.image ? urlFor(data.featuresList[2].image).url() : 'https://res.cloudinary.com/du6d1qifw/image/upload/v1789199406/muttajahSite/soma-laszlo-rt4SRyA29TE-unsplash_rwfwii.jpg'} alt="Feature 3" width="300" />
     <div className="feature-content">
-      <h2>Feature 3</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h2>{data?.featuresList?.[2]?.heading || 'Feature 3'}</h2>
+      <p>{data?.featuresList?.[2]?.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}</p>
     </div>
+     <Link
+        to={`/post/${data?.featuresList?.[2]?.postId}`}
+        title="read more"
+        className="card-link"
+      ></Link>
   </div>
 
+  {/* Feature 4 */}
   <div className="feature rainy-feature">
-    <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789199316/muttajahSite/stanislav-margolin-CRmUtjJE3nM-unsplash_lmd5rt.jpg' alt="Feature 4" width="300" />
+    <img src={data?.featuresList?.[3]?.image ? urlFor(data.featuresList[3].image).url() : 'https://res.cloudinary.com/du6d1qifw/image/upload/v1789199316/muttajahSite/stanislav-margolin-CRmUtjJE3nM-unsplash_lmd5rt.jpg'} alt="Feature 4" width="300" />
     <div className="feature-content">
-      <h2>Feature 4</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h2>{data?.featuresList?.[3]?.heading || 'Feature 4'}</h2>
+      <p>{data?.featuresList?.[3]?.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}</p>
     </div>
+     <Link
+        to={`/post/${data?.featuresList?.[3]?.postId}`}
+        title="read more"
+        className="card-link"
+      ></Link>
   </div>
 
+  {/* Feature 5 */}
   <div className="feature snowy-feature">
-    <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789203977/muttajahSite/compagnons-z2_GyXqzOcE-unsplash_tztju3.jpg' alt="Feature 5" width="300" />
+    <img src={data?.featuresList?.[4]?.image ? urlFor(data.featuresList[4].image).url() : 'https://res.cloudinary.com/du6d1qifw/image/upload/v1789203977/muttajahSite/compagnons-z2_GyXqzOcE-unsplash_tztju3.jpg'} alt="Feature 5" width="300" />
     <div className="feature-content">
-      <h2>Feature 5</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <h2>{data?.featuresList?.[4]?.heading || 'Feature 5'}</h2>
+      <p>{data?.featuresList?.[4]?.text || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}</p>
     </div>
+     <Link
+        to={`/post/${data?.featuresList?.[4]?.postId}`}
+        title="read more"
+        className="card-link"
+      ></Link>
   </div>
-</div>{/* end-features-container */}
+
+</div>
       <div className="bg-overlays">
        {/* Gradient Layers  */}
       <div className="bg-gradient sun-bg"></div>
@@ -597,29 +626,14 @@ bindScrollToLabels(allFeatures[3], "rainyStart", "rainyEnd", {
      
 
     </div>
-    <div className="motion-background">
-        {/* Rain Lottie */}
-        <div id="rain-lottie-container" className="lottie-bg">
-          <DotLottiePlayer
-            ref={rainLottieRef}
-            src={rainLottieData}
-            loop
-            autoplay={false} // Managed by ScrollTrigger callbacks
-            style={{ width: '100%', height: '100%' }}
-          />
-        </div>
-
-        {/* Snow Lottie */}
-        <div id="snow-lottie-container" className="lottie-bg">
-          <DotLottiePlayer
-            ref={snowLottieRef}
-            src={snowLottieData}
-            loop
-            autoplay={false} // Managed by ScrollTrigger callbacks
-            style={{ width: '100%', height: '100%' }}
-          />
-        </div>
-      </div>
+    {/* Features Section Bottom CTA */}
+    {data?.featuresCtaText && (
+  <div className="features-cta-wrapper">
+    <Link to={data?.featuresCtaLink || '/'} className="features-cta-button hero-button">
+      {data?.featuresCtaText}
+    </Link>
+  </div>
+)}
 </section>
     </>
   )

@@ -85,12 +85,17 @@ a {
         z-index: 15;
         color: black;
     position: relative;
+    max-width: 800px;
+    margin: auto;
+    padding-inline: .25rem;
 }
-.section-heading h1{
+.section-heading h1,
+.section-heading h2{
     color: hsl(36, 100%, 64%);
     font-weight: 700;
     font-size: 3rem;
     text-shadow: 1px 1px 0px #a8a8a8;
+    
 }
 
 .container{
