@@ -158,8 +158,8 @@ function Footer() {
           <div style={style.cardColumn}>
             <span style={style.heading}>Explore ⚡</span>
             <Link to="/posts" className="funky-link" style={style.link}>discover</Link>
-            <a href="#" className="funky-link" style={style.link}>about</a>
-            <a href="#" className="funky-link" style={style.link}>contact</a>
+            <a href="/about " className="funky-link" style={style.link}>about</a>
+            <a href="/contact" className="funky-link" style={style.link}>contact</a>
           </div>
 
           {/* Social Card */}
@@ -181,8 +181,8 @@ function Footer() {
         </p>
 
         <div style={style.legalLinks}>
-          <a href="#" className="funky-link" style={style.link}>privacy policy</a>
-          <a href="#" className="funky-link" style={style.link}>terms of service</a>
+          <a href="/privacy-policy" className="funky-link" style={style.link}>privacy policy</a>
+          <a href="/terms-of-service" className="funky-link" style={style.link}>terms of service</a>
         </div>
       </div>
     </footer>

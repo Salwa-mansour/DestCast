@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { client } from '../sanity/sanityClient'
 import { urlFor } from '../utils/urlFor'
+import { usePageMetadata } from '../hooks/usePageMetadata';
 export interface Post {
   _id: string
   title: string
@@ -16,10 +17,15 @@ export interface Post {
     lng: number
   }
 }
-
+export interface PageMetaData{
+  title:string
+  headerImage:any
+  content:any
+}
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
+  const { pageMetaData, metaDataLoading } = usePageMetadata('posts');
   
   // 1. Keep track of immediate input value & debounced value separately
   const [searchTerm, setSearchTerm] = useState('')
@@ -63,9 +69,15 @@ export default function Posts() {
   return (
     <>
       <header className="page-header">
+    
         <figure className="header-img" tabIndex={-1}>
-          <img src='https://res.cloudinary.com/du6d1qifw/image/upload/v1789199316/muttajahSite/stanislav-margolin-CRmUtjJE3nM-unsplash_lmd5rt.jpg' alt="Page header" />
-        </figure>
+            {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
+              <img
+                src={urlFor(pageMetaData?.headerImage).width(1200).height(600).url()}
+                alt={pageMetaData.title}
+              />
+            )}
+          </figure>
         <form className="search-post" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
@@ -74,6 +86,7 @@ export default function Posts() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
+      
       </header>
 
       <section className="posts-container container">

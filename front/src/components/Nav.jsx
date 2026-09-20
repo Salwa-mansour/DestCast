@@ -121,12 +121,12 @@ function Nav() {
             </Link>
           </li>
           <li>
-            <a href="#" onClick={handleLinkClick}>
+            <a href="/about " onClick={handleLinkClick}>
               about
             </a>
           </li>
           <li>
-            <a href="#" onClick={handleLinkClick}>
+            <a href="/contact" onClick={handleLinkClick}>
               Contact
             </a>
           </li>
