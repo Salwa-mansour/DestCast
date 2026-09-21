@@ -12,6 +12,12 @@ export const pageType = defineType({
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'description',
+      title: 'Page description',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
       name: 'slug',
       title: 'Slug',
       type: 'slug',

@@ -15,6 +15,7 @@ export function usePageMetadata(slug: string) {
     const query = `{
       "page": *[_type == "page" && slug.current == $slug][0]{
         title,
+        description,
         headerImage,
         content,
         seo

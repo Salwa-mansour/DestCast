@@ -24,24 +24,16 @@ export default function StaticPage() {
   useEffect(() => {
     client
       .fetch(
-        `{
-        "page": *[_type == "page" && slug.current == $slug][0]{
-          title,
-          headerImage,
-          content,
-          seo
-        },
-        "settings": *[_type == "siteSettings"][0]{
-          title,
-          seo
-        }
-      }[0]{
-        "title": coalesce(page.seo.metaTitle, page.title, settings.seo.metaTitle, settings.title),
-        "description": coalesce(page.seo.metaDescription, settings.seo.metaDescription),
-        "image": coalesce(page.seo.openGraphImage, page.headerImage, settings.seo.openGraphImage),
-        "content": page.content,
-        "pageTitle": page.title
-      }`,
+        `
+        *[_type == "page" && slug.current == $slug][0]{
+        "title": coalesce(seo.metaTitle, title, *[_type == "siteSettings"][0].seo.metaTitle, *[_type == "siteSettings"][0].title),
+        "description": coalesce(seo.metaDescription, *[_type == "siteSettings"][0].seo.metaDescription),
+        "image": coalesce(seo.openGraphImage, headerImage, *[_type == "siteSettings"][0].seo.openGraphImage),
+        "headerImage": headerImage,
+        "content": content,
+        "pageTitle": title
+      }
+        `,
         { slug }
       )
       .then((data) => {
@@ -64,8 +56,6 @@ export default function StaticPage() {
     ? urlFor(ogImageSource).width(1200).height(630).url() 
     : undefined;
 
-  if (loading) return <div>Loading...</div>;
-  if (!pageData) return <div>404 - Page Not Found</div>;
 
   return (
     <>
@@ -78,29 +68,32 @@ export default function StaticPage() {
         {seoDescription && <meta property="og:description" content={seoDescription} />}
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
       </Helmet>
-
-      <article className="max-w-3xl mx-auto px-4 py-8">
-        <div className="page-header">
-          {pageData.headerImage && pageData.headerImage.asset && (
-            <figure className="main-img">
+      <header className="page-header">
+          {pageData?.headerImage && pageData?.headerImage.asset && (
+            <figure  className="header-img" tab-index="-1">
               <img
-                src={urlFor(pageData.headerImage).width(1200).height(600).url()}
-                alt={pageData.title || "Page header"}
+                src={urlFor(pageData?.headerImage).width(1200).height(600).url()}
+                alt={pageData?.title || "Page header"}
               />
             </figure>
           )}
-        </div>
-
-        {/* <h1 className="text-4xl font-bold mb-6">{pageData.title}</h1> */}
-        
-        <div className="prose" style={{ color: '#333' }}>
-          {pageData.content ? (
-            <PortableText value={pageData.content} />
-          ) : (
-            <p>No content added yet.</p>
-          )}
-        </div>
-      </article>
+        </header>
+      <section className="container">
+          {loading ? (
+              <p className="loading-text">Loading content...</p>
+            ) : !pageData ? (
+              <p className="error-text">no content.</p>
+            ) : (
+              <div className="text-container">
+                {/* <h1 className="text-4xl font-bold mb-6">{pageData.title}</h1> */}
+                {pageData?.content ? (
+                  <PortableText value={pageData?.content} />
+                ) : (
+                  <p>No content added yet.</p>
+                )}
+              </div>
+            )}
+      </section>
     </>
   );
 }

@@ -47,7 +47,7 @@ export default function Contact() {
 
   // Safe SEO metadata fallbacks
   const seoTitle = pageMetaData?.seo?.metaTitle || pageMetaData?.title || 'Contact Us';
-  const seoDescription = pageMetaData?.seo?.metaDescription;
+  const seoDescription = pageMetaData?.seo?.metaDescription || pageMetaData?.description || 'Contact Us';
   
   const ogImageSource = pageMetaData?.seo?.openGraphImage || pageMetaData?.headerImage;
   const ogImageUrl = ogImageSource 
@@ -65,9 +65,7 @@ export default function Contact() {
         {seoDescription && <meta property="og:description" content={seoDescription} />}
         {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
       </Helmet>
-
-      <div className="contact-page" style={{ minHeight: '100vh', padding: '4rem', background: '#fffbee' }}>
-        <header className="page-header">
+          <header className="page-header">
           <figure className="header-img" tabIndex={-1}>
             {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
               <img
@@ -77,42 +75,46 @@ export default function Contact() {
             )}
           </figure>
         </header>
-        
-        <div className="contact-header" style={{ color: '#333' }}>
-          <h1>Get in Touch</h1>
-          <p>Have a question or want to collaborate? Send a message directly to our inbox.</p>
-        </div>
 
-        <form onSubmit={handleSubmit} className="contact-form">
-          {/* Hidden Honeypot Spam Protection */}
-          <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
+       <section className="container">
+          <div className="text-container">
+              <div className="section-heading" >
+                <h2> {pageMetaData?.title || 'Get in Touch'}</h2>
+                <p> {pageMetaData?.description ||
+                 'Have a question or want to collaborate? Send a message directly to our inbox.'} </p>
+              </div>
 
-          <div className="form-group">
-            <label htmlFor="name">Your Name</label>
-            <input type="text" id="name" name="name" required placeholder="John Doe" />
-          </div>
+              <form onSubmit={handleSubmit} className="contact-form">
+                {/* Hidden Honeypot Spam Protection */}
+                <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
 
-          <div className="form-group">
-            <label htmlFor="email">Your Email</label>
-            <input type="email" id="email" name="email" required placeholder="john@example.com" />
-          </div>
+                <div className="form-group">
+                  {/* <label htmlFor="name">Your Name</label> */}
+                  <input type="text" id="name" name="name" required placeholder="Your Nam" />
+                </div>
 
-          <div className="form-group">
-            <label htmlFor="message">Message</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Write your message here..."></textarea>
-          </div>
+                <div className="form-group">
+                  {/* <label htmlFor="email">Your Email</label> */}
+                  <input type="email" id="email" name="email" required placeholder="Your Email" />
+                </div>
 
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Message'}
-          </button>
+                <div className="form-group">
+                  {/* <label htmlFor="message">Message</label> */}
+                  <textarea id="message" name="message" rows="5" required placeholder="Write your message here..."></textarea>
+                </div>
 
-          {status && (
-            <p className={`form-status ${status.type}`} style={{ color: '#333' }}>
-              {status.message}
-            </p>
-          )}
-        </form>
-      </div>
+                <button type="submit" className="hero-button" disabled={loading}>
+                  {loading ? 'Sending...' : 'Send Message'}
+                </button>
+
+                {status && (
+                  <p className={`form-status ${status.type}`} style={{ color: '#333' }}>
+                    {status.message}
+                  </p>
+                )}
+              </form>
+         </div>
+      </section>
     </>
   );
 }
