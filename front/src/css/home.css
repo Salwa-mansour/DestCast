@@ -89,6 +89,7 @@
     text-shadow: 1px 1px 10px black;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-decoration: none;
 }
 
 .hero-button:hover {

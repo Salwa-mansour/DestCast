@@ -24,6 +24,18 @@ export const siteSettingsType = defineType({
       type: 'image',
       options: { hotspot: true },
     }),
+    defineField({
+      name: 'siteLogo',
+      title: 'site logo',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+     defineField({
+      name: 'footerParagraph',
+      title: 'footer Paragraph',
+      type: 'string',
+     
+    }),
     // Embed the SEO object here for global defaults/fallback values
     defineField({
       name: 'seo',
