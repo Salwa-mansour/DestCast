@@ -1,26 +1,65 @@
 import { useState, useEffect } from 'react';
 import { client } from '../sanity/sanityClient';
-import { PageMetaData } from '../pages/Posts'; // or wherever your types live
 
 export function usePageMetadata(slug: string) {
-  // Explicitly type the state using your interface or null
-  const [pageMetaData, setPageMetaData] = useState<PageMetaData | null>(null);
+  const [pageMetaData, setPageMetaData] = useState<any | null>(null);
   const [metaDataLoading, setMetaDataLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!slug) return;
 
     setMetaDataLoading(true);
-    const query = `*[_type == "page" && slug.current == $slug][0]{
-      title,
-      headerImage,
-      content
+
+    // Multi-document query fetching both the page and global siteSettings, 
+    // then mapping out the fallback hierarchy using coalesce()
+    const query = `{
+      "page": *[_type == "page" && slug.current == $slug][0]{
+        title,
+        headerImage,
+        content,
+        seo
+      },
+      "settings": *[_type == "siteSettings"][0]{
+        title,
+        seo
+      }
     }`;
 
     client
       .fetch(query, { slug })
-      .then((data) => {
-        setPageMetaData(data);
+      .then((res) => {
+        const page = res?.page;
+        const settings = res?.settings;
+
+        if (!page) {
+          setPageMetaData(null);
+          setMetaDataLoading(false);
+          return;
+        }
+
+        // Construct processed object with robust fallbacks
+        const processedData = {
+          ...page,
+          seo: {
+            metaTitle: coalesce(
+              page.seo?.metaTitle, 
+              page.title, 
+              settings?.seo?.metaTitle, 
+              settings?.title
+            ),
+            metaDescription: coalesce(
+              page.seo?.metaDescription, 
+              settings?.seo?.metaDescription
+            ),
+            openGraphImage: coalesce(
+              page.seo?.openGraphImage, 
+              page.headerImage, 
+              settings?.seo?.openGraphImage
+            )
+          }
+        };
+
+        setPageMetaData(processedData);
         setMetaDataLoading(false);
       })
       .catch((err) => {
@@ -30,4 +69,9 @@ export function usePageMetadata(slug: string) {
   }, [slug]);
 
   return { pageMetaData, metaDataLoading };
+}
+
+// Helper utility function mimicking GROQ's coalesce in JavaScript/TypeScript
+function coalesce(...args: any[]) {
+  return args.find(val => val !== undefined && val !== null && val !== '');
 }

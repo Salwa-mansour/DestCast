@@ -1,83 +1,110 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { client } from '../sanity/sanityClient'
-import { urlFor } from '../utils/urlFor'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { client } from '../sanity/sanityClient';
+import { urlFor } from '../utils/urlFor';
 import { usePageMetadata } from '../hooks/usePageMetadata';
-export interface Post {
-  _id: string
-  title: string
-  slug: { current: string }
-  mainImage: any
-  body: any
+import { Helmet } from 'react-helmet-async';
 
+export interface Post {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  mainImage: any;
+  body: any;
   locationDetails?: {
-    countryName: string
-    cityName: string
-    lat: number
-    lng: number
-  }
+    countryName: string;
+    cityName: string;
+    lat: number;
+    lng: number;
+  };
+  seo: any;
 }
-export interface PageMetaData{
-  title:string
-  headerImage:any
-  content:any
+
+export interface PageMetaData {
+  title: string;
+  headerImage: any;
+  content: any;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    openGraphImage?: any;
+  };
 }
+
 export default function Posts() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
   const { pageMetaData, metaDataLoading } = usePageMetadata('posts');
   
   // 1. Keep track of immediate input value & debounced value separately
-  const [searchTerm, setSearchTerm] = useState('')
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   useEffect(() => {
     // GROQ Query to fetch post details + custom location object
     client
       .fetch(`*[_type == "post"]{ _id, title, slug, mainImage, locationDetails }`)
       .then((data) => {
-        setPosts(data)
-        setLoading(false)
+        setPosts(data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.error(err)
-        setLoading(false)
-      })
-  }, [])
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   // 2. Debounce effect: Wait 400ms after user stops typing before updating debouncedSearchTerm
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm)
-    }, 400) // 400ms delay
+      setDebouncedSearchTerm(searchTerm);
+    }, 400); // 400ms delay
 
-    return () => clearTimeout(timer) // Clear timer if user types again before 400ms passes
-  }, [searchTerm])
+    return () => clearTimeout(timer); // Clear timer if user types again before 400ms passes
+  }, [searchTerm]);
 
   // 3. Filter using debouncedSearchTerm instead of raw input value
   const filteredPosts = posts.filter((post) => {
-    const query = debouncedSearchTerm.toLowerCase().trim()
-    if (!query) return true
+    const query = debouncedSearchTerm.toLowerCase().trim();
+    if (!query) return true;
 
-    const titleMatch = post.title?.toLowerCase().includes(query)
-    const cityMatch = post.locationDetails?.cityName?.toLowerCase().includes(query)
-    const countryMatch = post.locationDetails?.countryName?.toLowerCase().includes(query)
+    const titleMatch = post.title?.toLowerCase().includes(query);
+    const cityMatch = post.locationDetails?.cityName?.toLowerCase().includes(query);
+    const countryMatch = post.locationDetails?.countryName?.toLowerCase().includes(query);
 
-    return titleMatch || cityMatch || countryMatch
-  })
+    return titleMatch || cityMatch || countryMatch;
+  });
+
+  // Safe SEO metadata extraction from the hook data
+  const seoTitle = pageMetaData?.seo?.metaTitle || pageMetaData?.title || 'Travel Posts';
+  const seoDescription = pageMetaData?.seo?.metaDescription;
+  
+  const ogImageSource = pageMetaData?.seo?.openGraphImage || pageMetaData?.headerImage;
+  const ogImageUrl = ogImageSource 
+    ? urlFor(ogImageSource).width(1200).height(630).url() 
+    : undefined;
 
   return (
     <>
+      <Helmet>
+        <title>{seoTitle}</title>
+        {seoDescription && <meta name="description" content={seoDescription} />}
+
+        {/* Open Graph / Social Sharing Meta Tags */}
+        <meta property="og:title" content={seoTitle} />
+        {seoDescription && <meta property="og:description" content={seoDescription} />}
+        {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+      </Helmet>
+
       <header className="page-header">
-    
         <figure className="header-img" tabIndex={-1}>
-            {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
-              <img
-                src={urlFor(pageMetaData?.headerImage).width(1200).height(600).url()}
-                alt={pageMetaData.title}
-              />
-            )}
-          </figure>
+          {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
+            <img
+              src={urlFor(pageMetaData?.headerImage).width(1200).height(600).url()}
+              alt={pageMetaData.title || 'Posts Header'}
+            />
+          )}
+        </figure>
         <form className="search-post" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
@@ -86,7 +113,6 @@ export default function Posts() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
-      
       </header>
 
       <section className="posts-container container">
@@ -124,5 +150,5 @@ export default function Posts() {
         )}
       </section>
     </>
-  )
+  );
 }

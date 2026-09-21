@@ -21,6 +21,13 @@ export const pageType = defineType({
       },
       validation: (Rule) => Rule.required(),
     },
+     // Embed the SEO object here for post-specific overrides
+    defineField({
+      name: 'seo',
+      title: 'Post SEO & Metadata',
+      type: 'seo',
+    })
+    ,
     {
       name: 'headerImage',
       title: 'Header Image',
