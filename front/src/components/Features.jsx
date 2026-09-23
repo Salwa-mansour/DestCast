@@ -114,7 +114,7 @@ const mobileAnimations = () => {
       trigger: containerRef.current, // Parent container (.features)
       start: 'top top+=100',          // Starts when top of section reaches near top of viewport
       end: 'bottom bottom',          // Ends when bottom of section reaches bottom of viewport
-      scrub: 1,                      // Smooth scrub tracking
+      scrub: 2,                      // Smooth scrub tracking
       invalidateOnRefresh: true,
     },
   });
