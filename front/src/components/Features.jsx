@@ -227,7 +227,7 @@ const mobileAnimations = () => {
 };
     const desktopAnimations = ()=>{
       const allFeatures = gsap.utils.toArray(".features .feature");
-      console.log(allFeatures)
+   
       // --- Inset Layout Logic ---
       gsap.set(allFeatures[0], { top: "10%", right: "15%", left: "auto" });
       gsap.set(allFeatures[1], { top: "23%", left: "10%", right: "auto" });
@@ -379,7 +379,7 @@ function bindScrollToLabels(triggerElem, startLabel, endLabel, config = {}) {
         trigger: triggerElem,
         start: config.start || "top center",
         end: config.end || "center top",
-        scrub: config.scrub ?? 2,
+        scrub: config.scrub ?? 3,
         invalidateOnRefresh: true,
         markers: config.markers || false
       }
