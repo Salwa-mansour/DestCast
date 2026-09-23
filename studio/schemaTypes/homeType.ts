@@ -19,7 +19,7 @@ export const homeType = defineType({
     {
       name: 'heroImage',
       title: 'Hero Image',
-      type: 'image',
+      type: 'imageWithAttribution',
       options: { hotspot: true },
     },
     {

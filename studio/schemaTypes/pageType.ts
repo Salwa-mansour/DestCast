@@ -15,7 +15,7 @@ export const pageType = defineType({
       name: 'description',
       title: 'Page description',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+     
     },
     {
       name: 'slug',
@@ -37,7 +37,7 @@ export const pageType = defineType({
     {
       name: 'headerImage',
       title: 'Header Image',
-      type: 'image',
+      type: 'imageWithAttribution',
       options: { 
         hotspot: true // Enables image cropping and focal point selection in Sanity Studio
       },

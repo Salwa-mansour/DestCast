@@ -72,7 +72,12 @@ export default function Contact() {
                 src={urlFor(pageMetaData?.headerImage).width(1200).height(600).url()}
                 alt={pageMetaData.title || 'Contact Header'}
               />
+              
             )}
+             <figcaption 
+            className="image-attribution"
+            dangerouslySetInnerHTML={{ __html: pageMetaData?.headerImage?.imageAttribution }} 
+          />
           </figure>
         </header>
 

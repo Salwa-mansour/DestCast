@@ -16,6 +16,7 @@ import { Helmet } from 'react-helmet-async';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import RelatedPosts from '../components/RelatedPosts'
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,31 +32,31 @@ export default function PostDetail() {
   const [location, setLocation] = useState<Location | null>(null);
   const weather = useTripWeather(location!);
   const [isPopOpen, setIsPopOpen] = useState<boolean>(false);
+   // 1. We change this ref to wrap the overall container holding BOTH the grid items
+  const mainWrapperRef = useRef(null); 
   const asideRef = useRef(null);
-  const postRef = useRef(null);
+  const articleContentRef = useRef(null); // Dedicated trigger for text height tracking
 
-  useGSAP(() => {
-    // Initialize GSAP matchMedia for responsive rules
-    let mm = gsap.matchMedia();
+useGSAP(() => {
+  if (loading || !post) return;
 
-   // Desktop-only condition
-   mm.add("(min-width: 867px)", () => {
-      ScrollTrigger.create({
-        trigger: postRef.current,       // Master trigger: the .post article container
-        start: "top top+=20",           // Pins when top of .post hits top of viewport (+20px breathing room)
-        end: "bottom bottom",           // Releases when bottom of .post hits bottom of viewport
-        pin: asideRef.current,          // The element to actually lock in place
-        pinSpacing: false,              // Keeps CSS grid layout clean
-        markers: true,                  // Keep true to check visual layout lines
-      });
+  let mm = gsap.matchMedia();
 
-      return () => {};
+  mm.add("(min-width: 867px)", () => {
+    ScrollTrigger.create({
+      trigger: articleContentRef.current, // Triggers based on the article content container
+      start: "top top+=20",               // When the text area hits the top of viewport (+20px)
+      end: "bottom bottom",               // Until the text area finishes scrolling
+      toggleClass: { 
+        targets: asideRef.current, 
+        className: "is-stuck"             // Adds this class when inside the trigger zone, removes it outside
+      },
+      markers: true,                  
     });
+  });
 
-     
-    return () => mm.revert(); // Clean up matchMedia on unmount
-  }, []);
-
+  return () => mm.revert(); 
+}, { scope: mainWrapperRef, dependencies: [loading, post] });
   useEffect(() => {
     client
       .fetch(
@@ -80,11 +81,17 @@ export default function PostDetail() {
           setLocation(data.locationDetails)
         }
         setLoading(false)
+        // 3. Give React one tick to finish rendering the DOM nodes before refreshing positions
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 100);
       })
       .catch((err) => {
         console.error(err)
         setLoading(false)
       })
+     
+  
   }, [id])
 
   // Safely compute SEO values directly from the loaded post state
@@ -114,7 +121,7 @@ export default function PostDetail() {
         ) : !post ? (
           <p className="error-text">Post not found.</p>
         ) : (
-          <div className="main-wrapper">
+          <div ref={mainWrapperRef} className="main-wrapper">
             <Link to="/posts" className="back-link" title="Back to All Posts">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +191,7 @@ export default function PostDetail() {
                 />
               </div>
 
-              <div ref={postRef} className="post">
+              <div ref={articleContentRef} className="post">
                   <div className='text-container'>
                         {post.body ? (
                           <PortableText
@@ -199,6 +206,9 @@ export default function PostDetail() {
             </article>
           </div>
         )}
+      </section>
+      <section>
+        <RelatedPosts currentSlug={post?.slug.current} country={post?.locationDetails?.countryName} />
       </section>
     </>
   )

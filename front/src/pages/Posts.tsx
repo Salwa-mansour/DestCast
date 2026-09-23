@@ -116,7 +116,7 @@ client
   const seoTitle = pageMetaData?.seo?.metaTitle || pageMetaData?.title || 'Travel Posts';
   const seoDescription = pageMetaData?.seo?.metaDescription;
   
-  const ogImageSource = pageMetaData?.seo?.openGraphImage || pageMetaData?.headerImage;
+  const ogImageSource = pageMetaData?.seo?.openGraphImage || pageMetaData?.headerImage.asset;
   const ogImageUrl = ogImageSource 
     ? urlFor(ogImageSource).width(1200).height(630).url() 
     : undefined;
@@ -137,10 +137,16 @@ client
         <figure className="header-img" tabIndex={-1}>
           {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
             <img
-              src={urlFor(pageMetaData?.headerImage).width(1200).height(600).url()}
+              src={urlFor(pageMetaData?.headerImage?.asset).width(1200).height(600).url()}
               alt={pageMetaData.title || 'Posts Header'}
             />
+            
           )}
+          <figcaption 
+            className="image-attribution"
+            dangerouslySetInnerHTML={{ __html: pageMetaData?.headerImage?.imageAttribution }} 
+          />
+                
         </figure>
         <form className="search-post" onSubmit={(e) => e.preventDefault()}>
           <input
@@ -161,7 +167,7 @@ client
               <figure className="post-img">
                 {post.mainImage && post.mainImage.asset && (
                   <img
-                    src={urlFor(post.mainImage).width(1200).height(600).url()}
+                    src={urlFor(post.mainImage).width(800).height(600).url()}
                     alt={post.title}
                   />
                 )}

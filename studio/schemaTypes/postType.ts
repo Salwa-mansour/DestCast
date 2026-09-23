@@ -50,6 +50,7 @@ export const postType = defineType({
       title: 'Destination Location',
       description: 'Select country and city to automatically save coordinates.',
       type: 'object',
+      validation: (Rule) => Rule.required(),
       components: {
         input: LocationSelector, // Registers your custom React dropdown component
       },

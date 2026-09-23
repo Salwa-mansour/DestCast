@@ -31,6 +31,7 @@
 .single-page-content{
     width: 100%;
     display: grid;
+    align-items: start;
 }
 .main-img{
     position: relative;
@@ -378,6 +379,18 @@ figure img{
     flex-direction: column;
    
    }
+   .related-posts-grid{
+    display: flex;
+    padding: 1rem;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    color: black;
+   }
+   .related-posts-grid .item-card{
+      height: auto;
+   }
 @media (max-width:866px){
    .date-popover{
     position: fixed;
@@ -471,6 +484,11 @@ figure img{
         display: flex;
         flex-direction: column;
    }
+    .weather-quiery.is-stuck {
+    position: sticky;
+    top: 20px; /* Sticks 20px from the top of the viewport */
+    z-index: 10;
+  }
 }
 /* @media (min-width: 867px) {
     .rdrCalendarWrapper{

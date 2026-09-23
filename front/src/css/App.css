@@ -14,9 +14,11 @@ body{
   line-height: 1.6;
 }
 body p,
-body a{
+body a,
+.text-container{
     font-weight: 400;
 }
+
 button{
     font-family: "Quicksand", sans-serif
 }

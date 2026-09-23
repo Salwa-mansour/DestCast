@@ -72,9 +72,15 @@ export default function StaticPage() {
           {pageData?.headerImage && pageData?.headerImage.asset && (
             <figure  className="header-img" tab-index="-1">
               <img
-                src={urlFor(pageData?.headerImage).width(1200).height(600).url()}
+                src={urlFor(pageData?.headerImage.asset).width(1200).height(600).url()}
                 alt={pageData?.title || "Page header"}
               />
+              {pageData.headerImage?.imageAttribution && (
+                  <figcaption 
+                    className="image-attribution"
+                    dangerouslySetInnerHTML={{ __html: pageData.headerImage.imageAttribution }} 
+                  />
+                )}
             </figure>
           )}
         </header>
