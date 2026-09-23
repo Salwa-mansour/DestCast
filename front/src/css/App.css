@@ -10,6 +10,12 @@ body{
      font-family: "Quicksand", sans-serif;
      font-weight: 300;
      color: #fff;
+     font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  line-height: 1.6;
+}
+body p,
+body a{
+    font-weight: 400;
 }
 button{
     font-family: "Quicksand", sans-serif
@@ -40,6 +46,7 @@ a {
     display: flex;
      /* color: #000; */
     align-items: center;
+    background: linear-gradient(to top, rgb(0 0 0 / 0%) 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 /* .nav a{
     font-weight: 500;
@@ -212,6 +219,7 @@ a {
     color: #000;
     
 }
+
 .text-container h1,
 .text-container h2,
 .text-container h3,
@@ -242,16 +250,55 @@ a {
 .contact-form button{ 
     margin: auto;
 }
-@media (min-width: 767px) {
+header .image-attribution{
+    --attribution-color:#333333bd;
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 2rem;
+    font-size: .75rem;
+    color: var(--attribution-color);
+    font-weight: 500;
+}
+header .image-attribution a{
+    color: var(--attribution-color);
+}
+.post .image-attribution{
+    position: absolute;
+    --attribution-color:#333333bd;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--attribution-color);
+    white-space: nowrap;
+    font-size: .75rem;
+}
+.post .image-attribution a{
+    color: var(--attribution-color);
+}
+@media (min-width: 867px) {
     .posts-container .item-card{
-   
     width: 300px;
     }
+    .post-header__data .post-title,
+    .post-header__data .location{
+        max-width: 800px;
+        margin: auto;
+        text-indent: 1rem;
+    }
+    .post-header__data .location{
+        text-indent: 2rem;
+    }
 }
-@media (max-width:766px){
+@media (max-width:866px){
     /* mobile-nav */
    .nav a{
     color: #000;
+    font-size: 1.5rem;
+    font-weight: 500;
+   }
+   .nav{
+    background: unset;
    }
     .toggle-nav {
     display: inline-block;
@@ -292,5 +339,10 @@ a {
     }
     .text-container{
         text-align: center;
+    }
+   header .image-attribution{
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 95%;
     }
 }

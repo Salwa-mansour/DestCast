@@ -43,7 +43,34 @@ export default function Posts() {
   useEffect(() => {
     // GROQ Query to fetch post details + custom location object
     client
-      .fetch(`*[_type == "post"]{ _id, title, slug, mainImage, locationDetails }`)
+client
+      .fetch(`*[_type == "post"]{ 
+        _id, 
+        title, 
+        slug,
+        mainImage {
+          asset,
+          hotspot,
+          crop,
+          imageAttribution
+        },
+        body[] {
+          ...,
+          _type == "image" => {
+            asset,
+            hotspot,
+            crop,
+            imageAttribution
+          },
+          _type == "imageWithAttribution" => {
+            asset,
+            hotspot,
+            crop,
+            imageAttribution
+          }
+        },
+        locationDetails 
+      }`)
       .then((data) => {
         setPosts(data);
         setLoading(false);

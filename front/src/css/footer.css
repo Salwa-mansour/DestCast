@@ -160,13 +160,16 @@
   margin-left: 6px;
   vertical-align: middle;
 }
-@media (max-width:766px){
-   
+@media (max-width:866px){
+   /* moble stylings */
+  .footer-top-section{
+    flex-direction: column;
+  }
     .footer-brand-column{
         margin-inline-end: initial;
         align-items: center;
         text-align: center;
-        outline: 1px solid red;
+       
     }
     .footer-card-column{
         flex-direction: column;

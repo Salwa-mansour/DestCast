@@ -90,7 +90,7 @@ export default function Contact() {
 
                 <div className="form-group">
                   {/* <label htmlFor="name">Your Name</label> */}
-                  <input type="text" id="name" name="name" required placeholder="Your Nam" />
+                  <input type="text" id="name" name="name" required placeholder="Your Name" />
                 </div>
 
                 <div className="form-group">

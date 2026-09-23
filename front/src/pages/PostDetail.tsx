@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { PortableText } from '@portabletext/react'
 import { client } from '../sanity/sanityClient'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { faCaretLeft } from '@fortawesome/free-solid-svg-icons'
+import {faList} from '@fortawesome/free-solid-svg-icons'
 import { Post } from './Posts'
 import { customPortableTextComponents } from '../components/PortableTextComponents'
-import {faList} from '@fortawesome/free-solid-svg-icons'
-import TripWeather from '../components/TripWeather'
+
 import { urlFor } from '../utils/urlFor'
 import '../css/postDetail.css'
 import { LocationCoords, useTripWeather } from '../hooks/useTripWeather'
 import { WeatherDatePicker, WeatherSummary, DailyCast } from '../components/TripWeatherComponents'
 import WeatherPop from '../components/WeatherPop'
 import { Helmet } from 'react-helmet-async';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface Location {
   lng: number
@@ -21,12 +25,36 @@ interface Location {
 }
 
 export default function PostDetail() {
-  const { id } = useParams<{ id: string }>()
-  const [post, setPost] = useState<Post | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [location, setLocation] = useState<Location | null>(null)
-  const weather = useTripWeather(location!)
-  const [isPopOpen, setIsPopOpen] = useState<boolean>(false)
+  const { id } = useParams<{ id: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState<Location | null>(null);
+  const weather = useTripWeather(location!);
+  const [isPopOpen, setIsPopOpen] = useState<boolean>(false);
+  const asideRef = useRef(null);
+  const postRef = useRef(null);
+
+  useGSAP(() => {
+    // Initialize GSAP matchMedia for responsive rules
+    let mm = gsap.matchMedia();
+
+   // Desktop-only condition
+   mm.add("(min-width: 867px)", () => {
+      ScrollTrigger.create({
+        trigger: postRef.current,       // Master trigger: the .post article container
+        start: "top top+=20",           // Pins when top of .post hits top of viewport (+20px breathing room)
+        end: "bottom bottom",           // Releases when bottom of .post hits bottom of viewport
+        pin: asideRef.current,          // The element to actually lock in place
+        pinSpacing: false,              // Keeps CSS grid layout clean
+        markers: true,                  // Keep true to check visual layout lines
+      });
+
+      return () => {};
+    });
+
+     
+    return () => mm.revert(); // Clean up matchMedia on unmount
+  }, []);
 
   useEffect(() => {
     client
@@ -109,9 +137,15 @@ export default function PostDetail() {
                 {post.mainImage?.asset && (
                   <figure className="main-img">
                     <img
-                      src={urlFor(post.mainImage).width(1200).height(600).url()}
+                      src={urlFor(post.mainImage.asset).width(1200).height(600).url()}
                       alt={post.title}
                     />
+                  {post.mainImage?.imageAttribution && (
+                    <figcaption 
+                      className="image-attribution"
+                      dangerouslySetInnerHTML={{ __html: post.mainImage.imageAttribution }} 
+                    />
+                  )}
                   </figure>
                 )}
                 <div className="post-header__data">
@@ -124,7 +158,7 @@ export default function PostDetail() {
                 </div>
               </header>
 
-              <div className="weather-quiery">
+              <div ref={asideRef} className="weather-quiery">
                 <div className="weather-inline-wrapper">
                   <div className="weather-summary-wrapper box">
                     <WeatherSummary weather={weather} />
@@ -150,15 +184,17 @@ export default function PostDetail() {
                 />
               </div>
 
-              <div className="post">
-                {post.body ? (
-                  <PortableText
-                    value={post.body}
-                    components={customPortableTextComponents}
-                  />
-                ) : (
-                  <p>No content written yet.</p>
-                )}
+              <div ref={postRef} className="post">
+                  <div className='text-container'>
+                        {post.body ? (
+                          <PortableText
+                            value={post.body}
+                            components={customPortableTextComponents}
+                          />
+                        ) : (
+                          <p>No content written yet.</p>
+                        )}
+                  </div>
               </div>
             </article>
           </div>

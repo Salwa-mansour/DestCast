@@ -18,7 +18,7 @@ function Nav() {
       const mm = gsap.matchMedia()
 
       // 2. Define the mobile media query
-      mm.add('(max-width: 766px)', () => {
+      mm.add('(max-width: 866px)', () => {
         const tl = gsap.timeline({ paused: true })
 
         tl.to('.nav-container', {

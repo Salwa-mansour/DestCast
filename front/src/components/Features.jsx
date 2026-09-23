@@ -45,8 +45,8 @@ function Features({data}) {
             // Add conditions for Mobile and Desktop
             mm.add(
                 {
-                    isDesktop: '(min-width: 768px)',
-                    isMobile: '(max-width: 767px)',
+                    isDesktop: '(min-width: 868px)',
+                    isMobile: '(max-width: 867px)',
                 },
                 (context) => {
                 // Destructure boolean conditions
