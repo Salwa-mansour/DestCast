@@ -289,7 +289,7 @@ header .image-attribution a{
     .post-header__data .location{
         text-indent: 2rem;
     }
-}
+
 @media (max-width:866px){
     /* mobile-nav */
    .nav a{
