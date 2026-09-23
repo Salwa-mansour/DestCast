@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useSearchParams } from 'react-router-dom';
 import { client } from '../sanity/sanityClient';
 import { urlFor } from '../utils/urlFor';
 import { usePageMetadata } from '../hooks/usePageMetadata';
@@ -36,10 +36,20 @@ export default function Posts() {
   const [loading, setLoading] = useState(true);
   const { pageMetaData, metaDataLoading } = usePageMetadata('posts');
   
-  // 1. Keep track of immediate input value & debounced value separately
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchParams] = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
 
+    
+  // 1. Initialize state with the URL query parameter if present
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearch);
+
+  // Optional: Keep state synced if the URL changes while already on the page
+  useEffect(() => {
+    const queryParam = searchParams.get('search') || '';
+    setSearchTerm(queryParam);
+    setDebouncedSearchTerm(queryParam);
+  }, [searchParams]);
   useEffect(() => {
     // GROQ Query to fetch post details + custom location object
     client

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 
 import { Link, useLocation } from 'react-router-dom'
+import { NavbarSearch } from './NavbarSearch'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
@@ -129,6 +130,9 @@ function Nav() {
             <a href="/contact" onClick={handleLinkClick}>
               Contact
             </a>
+          </li>
+          <li className='search-item'>
+            <NavbarSearch hideMobileNav={handleLinkClick}/>
           </li>
         </ul>
       </div>
