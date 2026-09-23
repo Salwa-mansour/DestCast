@@ -391,6 +391,10 @@ figure img{
    .related-posts-grid .item-card{
       height: auto;
    }
+   .item-card .post-title,
+   .item-card .location{
+    margin-bottom: .5rem;
+   }
 @media (max-width:866px){
    .date-popover{
     position: fixed;

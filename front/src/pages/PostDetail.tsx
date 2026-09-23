@@ -51,7 +51,7 @@ useGSAP(() => {
         targets: asideRef.current, 
         className: "is-stuck"             // Adds this class when inside the trigger zone, removes it outside
       },
-      markers: true,                  
+      // markers: true,                  
     });
   });
 

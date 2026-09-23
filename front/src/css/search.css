@@ -1,4 +1,7 @@
 
+.nav-search-container *{
+    /* outline: 1px solid red; */
+}
 .nav-search-container{
     position: relative;
       width: 50%;
@@ -17,7 +20,7 @@
     border: 0;
     background-color: transparent;
     padding: 1rem;
-    margin: 1rem;
+   
    border: 2px solid #ffffff99;
     
 }
@@ -80,11 +83,18 @@ nav li{
 }
 .nav-search-container form{
     display: none;
+   
 }
 .search-item{
     order: initial;
 }
 nav li{
     order: initial;
+}
+.input-group{
+     gap: 1rem;
+}
+.nav-search-container button{
+    border-radius: 6px;
 }
 }

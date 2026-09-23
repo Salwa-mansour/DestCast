@@ -42,7 +42,7 @@ export default function RelatedPosts({ currentSlug, country }) {
 
   return (
     <section className="posts-container ">
-        <div className="section-heading">
+        <div className="section-heading related">
             <h3>More posts about {country}</h3>
         </div>
       

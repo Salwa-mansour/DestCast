@@ -11,10 +11,10 @@
 }
 .background{
     position: absolute;
-    height: 80%;
+    height: 70%;
     left: 0;
     top: 50%;
-    transform: translateY(-48%);
+    transform: translateY(-40%);
     z-index: 15;
     overflow: hidden;
 }

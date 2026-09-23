@@ -9,6 +9,7 @@ export interface Post {
   _id: string;
   title: string;
   slug: { current: string };
+  excerpt:string,
   mainImage: any;
   body: any;
   locationDetails?: {
@@ -58,6 +59,7 @@ client
         _id, 
         title, 
         slug,
+        excerpt,
         mainImage {
           asset,
           hotspot,
@@ -179,7 +181,7 @@ client
                   </h6>
                 )}
                 <h3 className="post-title">{post.title}</h3>
-                <p className="post-desc">post description</p>
+                <p className="post-desc">{post.excerpt}</p>
                 <Link
                   to={`/post/${post._id}`}
                   title="read more"
