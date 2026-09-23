@@ -54,7 +54,7 @@ export default function Posts() {
     // GROQ Query to fetch post details + custom location object
     client
 client
-      .fetch(`*[_type == "post"]{ 
+      .fetch(`*[_type == "post"] | order(_createdAt desc){ 
         _id, 
         title, 
         slug,

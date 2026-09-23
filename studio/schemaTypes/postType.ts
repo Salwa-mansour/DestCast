@@ -6,6 +6,24 @@ export const postType = defineType({
   name: 'post',
   title: 'Travel Post',
   type: 'document',
+  // 1. Define your collapsible fieldsets here
+  fieldsets: [
+    {
+      name: 'seasonalSection',
+      title: 'Seasonal Advice & Affiliates',
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: 'hotelSection',
+      title: 'Hotel Affiliate (Global Fallback)',
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: 'flightSection',
+      title: 'Flight Affiliate (Global Fallback)',
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -52,11 +70,11 @@ export const postType = defineType({
     // ----------------------------------------------------
     // NEW: Seasonal Advice & Affiliate Blocks Array
     // ----------------------------------------------------
-    defineField({
+   defineField({
       name: 'seasonalAffiliates',
-      title: 'Seasonal Advice & Affiliates',
-      description: 'Add tailored advice and affiliate links based on the time of year or season.',
+      title: 'Season Blocks',
       type: 'array',
+      fieldset: 'seasonalSection',
       of: [
         defineField({
           name: 'seasonBlock',
@@ -73,7 +91,7 @@ export const postType = defineType({
                   { title: 'Spring', value: 'spring' },
                   { title: 'Summer', value: 'summer' },
                   { title: 'Autumn / Fall', value: 'autumn' },
-                  {title:'rain' , value:'rain'}
+                  { title: 'Rain', value: 'rain' },
                 ],
               },
               validation: (Rule) => Rule.required(),
@@ -99,55 +117,49 @@ export const postType = defineType({
         }),
       ],
     }),
-     defineField({
-      name: 'hotelAffiliateUrl',
-      title: ' Hotel Affiliate URL',
-      type: 'object',
-      description: 'Global fallback hotel booking link and text used if a specific post does not have one.',
-      fields: [
-        defineField({
-          name: 'affiliateLink',
-          title: 'Affiliate URL',
-          type: 'url',
-        }),
-        defineField({
-          name: 'affiliateText',
-          title: 'Button/Callout Text',
-          type: 'string',
-          description: 'e.g., Find best hotels for these dates',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Helper Description / Advice',
-          type: 'text',
-          description: 'e.g., Book your stay in advance to secure the best rates.',
-        }),
-      ],
+
+    // 3. Hotel Fields flattened into the hotel fieldset
+    defineField({
+      name: 'hotelAffiliateLink',
+      title: 'Affiliate URL',
+      type: 'url',
+      fieldset: 'hotelSection',
     }),
     defineField({
-      name: 'flightAffiliateUrl',
-      title: ' Flight Affiliate URL',
-       type: 'object',
-      description: 'Global fallback flight booking link and text used if a specific post does not have one.',
-      fields: [
-        defineField({
-          name: 'affiliateLink',
-          title: 'Affiliate URL',
-          type: 'url',
-        }),
-        defineField({
-          name: 'affiliateText',
-          title: 'Button/Callout Text',
-          type: 'string',
-          description: 'e.g., Search available flights',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Helper Description / Advice',
-          type: 'text',
-          description: 'e.g., Compare airline ticket prices for your travel window.',
-        }),
-      ],
+      name: 'hotelAffiliateText',
+      title: 'Button/Callout Text',
+      type: 'string',
+      fieldset: 'hotelSection',
+      description: 'e.g., Find best hotels for these dates',
+    }),
+    defineField({
+      name: 'hotelDescription',
+      title: 'Helper Description / Advice',
+      type: 'text',
+      fieldset: 'hotelSection',
+      description: 'e.g., Book your stay in advance to secure the best rates.',
+    }),
+
+    // 4. Flight Fields flattened into the flight fieldset
+    defineField({
+      name: 'flightAffiliateLink',
+      title: 'Affiliate URL',
+      type: 'url',
+      fieldset: 'flightSection',
+    }),
+    defineField({
+      name: 'flightAffiliateText',
+      title: 'Button/Callout Text',
+      type: 'string',
+      fieldset: 'flightSection',
+      description: 'e.g., Search available flights',
+    }),
+    defineField({
+      name: 'flightDescription',
+      title: 'Helper Description / Advice',
+      type: 'text',
+      fieldset: 'flightSection',
+      description: 'e.g., Compare airline ticket prices for your travel window.',
     }),
     defineField({
       name: 'tags',

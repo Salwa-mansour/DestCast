@@ -276,7 +276,7 @@ header .image-attribution a{
 .post .image-attribution a{
     color: var(--attribution-color);
 }
-@media (min-width: 867px) {
+
     .posts-container .item-card{
     width: 300px;
     }
