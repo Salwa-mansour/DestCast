@@ -331,7 +331,7 @@ header .image-attribution a{
   }
 
   .nav-container {
-    background-image: linear-gradient(90deg, rgb(245 222 179 / 86%) 26%, rgb(255 182 71) 100%);
+    background-image:linear-gradient(90deg, rgb(245 222 179 / 65%) 26%, rgb(255 182 71) 100%);
     backdrop-filter: blur(5px);
     position: fixed;
     inset: 0;
