@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef,useEffect } from 'react'
 
 import { Link, useLocation } from 'react-router-dom'
 import { NavbarSearch } from './NavbarSearch'
@@ -13,6 +13,19 @@ function Nav() {
   const containerRef = useRef(null)
   const timelineRef = useRef(null)
 
+  // 1. Handle body overflow toggle whenever isOpen changes
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    // Cleanup when component unmounts just in case
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
   useGSAP(
     () => {
       // 1. Create a matchMedia instance scoped to this component
@@ -27,7 +40,7 @@ function Nav() {
           duration: 0.5,
           ease: 'power3.out',
         })
-        .to('.toggle-nav',{position:'fixed',duration:.05},'<')
+       
           .to(
             '#line-2',
             {

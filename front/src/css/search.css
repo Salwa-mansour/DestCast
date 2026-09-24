@@ -10,6 +10,7 @@
 .nav-search-container form{
         display: flex;
        justify-content: center;
+      
     }
     .nav-search-container button{
         cursor: pointer;
@@ -24,7 +25,8 @@
    border: 2px solid #ffffff99;
     
 }
-.nav-search-container input{
+.nav-search-container input,
+.nav-search-container button[type="submit"]{
     border-radius: 24px;
 }
 .search-item{
@@ -41,6 +43,7 @@ nav li{
     display: flex;
       align-items: center;
     justify-content: center;
+    gap: 1rem;
 }
 @media (min-width: 867px) {
     .nav-search-container{
