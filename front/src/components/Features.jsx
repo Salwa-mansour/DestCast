@@ -110,13 +110,14 @@ const mobileAnimations = () => {
 
   // 3. Single Master Timeline attached to the parent section (.features)
   const masterMobileTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: containerRef.current, // Parent container (.features)
-      start: 'top top+=100',          // Starts when top of section reaches near top of viewport
-      end: 'bottom+=200 bottom',          // Ends when bottom of section reaches bottom of viewport
-      scrub: .5,                      // Smooth scrub tracking
+ scrollTrigger: {
+      trigger: containerRef.current,
+      start: 'top top+=100',
+      end: 'bottom+=200 70%', // 👈 INCREASED distance significantly to slow it down!
+      // pin: true,                  // 👈 Pinning keeps the sequence on screen longer
+      scrub: 1,                   // 👈 Slightly higher scrub smoothing
       invalidateOnRefresh: true,
-      markers:true
+      markers: true
     },
   });
 
@@ -132,7 +133,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     })
 
     // Phase 2: Cloud appears, Sun transitions to Cloud (0.2 -> 0.45)
@@ -146,7 +147,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     })
     .to('.sun-icon-item', {
       motionPath: {
@@ -158,7 +159,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     }, '<')
     .to('.cloud-icon-item', { opacity: 1, duration: 0.1 }, '<')
     .to('.cloud-path', { opacity: 1, duration: 0.1 }, '<')
@@ -176,7 +177,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     })
 
     // Phase 4: Rain animation triggers (0.65 -> 0.87)
@@ -190,7 +191,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     })
     .to('.rain-path', { opacity: 1, duration: 0.1 }, '<')
     .to('.rain-path', { yPercent: 0, duration: 0.8 }, '<')
@@ -207,7 +208,7 @@ const mobileAnimations = () => {
         autoRotate: false,
       },
       ease: 'power1.out',
-      // duration: 1,
+      duration: 2,
     })
     .to('.snow-path', { opacity: 1, duration: 0.1 }, '<')
     .to('.snow-path', { yPercent: 0, duration: 0.8 }, '<')
@@ -292,7 +293,7 @@ mainWeatherTl
       start: 0,
       end: 0.2
     },
-    // duration: 1,
+    duration: 2,
     ease: "none"
   }, "<")
   .addLabel("sunEnd")
@@ -382,7 +383,7 @@ function bindScrollToLabels(triggerElem, startLabel, endLabel, config = {}) {
         end: config.end || "bottom center",
         scrub: config.scrub ?? .5,
         invalidateOnRefresh: true,
-        markers: config.markers || true
+        markers: config.markers || false
       }
     }
   );
