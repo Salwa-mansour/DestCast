@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef,useEffect } from 'react'
 import { UseTripWeatherReturn } from '../hooks/useTripWeather'
 import { WeatherDatePicker, WeatherSummary, DailyCast } from './TripWeatherComponents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,6 +16,19 @@ export default function WeatherPop({ isOpen, onClose, weather }: WeatherPopProps
   const overlayRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const tlRef = useRef<gsap.core.Timeline | null>(null)
+
+    useEffect(() => {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+
+      // Cleanup when component unmounts just in case
+      return () => {
+        document.body.style.overflow = ''
+      }
+    }, [isOpen])
 
   // Initialize GSAP Timeline inside useGSAP
   useGSAP(() => {

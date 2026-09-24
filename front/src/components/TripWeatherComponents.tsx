@@ -232,36 +232,5 @@ export function DailyCast({ weather }: SubComponentProps) {
     </ul>
   )
 }
-export function DailyCast2({ weather }: SubComponentProps) {
-  if (!weather.weatherData?.daily) return null
 
-  return (
-    <ul className='daily-cast-list' >
-      {weather.weatherData.daily.time.map((dateStr: string, index: number) => {
-        const code = weather.weatherData?.daily?.weathercode?.[index] ?? -1
-        const weatherDetails = getWeatherDetails(code)
 
-        return (
-          <li key={dateStr} className="dailyRow">
-            <div >
-              <span >{weatherDetails.icon}</span>
-              <div>
-                <span >{dateStr}</span>
-                <span >{weatherDetails.label}</span>
-              </div>
-            </div>
-
-            <div >
-              <span>
-                High: <strong>{weather.weatherData?.daily?.temperature_2m_max[index]}°C</strong>
-              </span>
-              <span >
-                Low: <strong>{weather.weatherData?.daily?.temperature_2m_min[index]}°C</strong>
-              </span>
-            </div>
-          </li>
-        )
-      })}
-    </ul>
-  )
-}
