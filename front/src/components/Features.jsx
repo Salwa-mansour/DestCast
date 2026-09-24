@@ -113,9 +113,10 @@ const mobileAnimations = () => {
     scrollTrigger: {
       trigger: containerRef.current, // Parent container (.features)
       start: 'top top+=100',          // Starts when top of section reaches near top of viewport
-      end: 'bottom bottom',          // Ends when bottom of section reaches bottom of viewport
-      scrub: 2,                      // Smooth scrub tracking
+      end: 'bottom+=200 bottom',          // Ends when bottom of section reaches bottom of viewport
+      scrub: .5,                      // Smooth scrub tracking
       invalidateOnRefresh: true,
+      markers:true
     },
   });
 
@@ -130,8 +131,8 @@ const mobileAnimations = () => {
         end: 0.2,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     })
 
     // Phase 2: Cloud appears, Sun transitions to Cloud (0.2 -> 0.45)
@@ -144,8 +145,8 @@ const mobileAnimations = () => {
         end: 0.45,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     })
     .to('.sun-icon-item', {
       motionPath: {
@@ -156,8 +157,8 @@ const mobileAnimations = () => {
         end: 0.45,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     }, '<')
     .to('.cloud-icon-item', { opacity: 1, duration: 0.1 }, '<')
     .to('.cloud-path', { opacity: 1, duration: 0.1 }, '<')
@@ -174,8 +175,8 @@ const mobileAnimations = () => {
         end: 0.65,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     })
 
     // Phase 4: Rain animation triggers (0.65 -> 0.87)
@@ -188,8 +189,8 @@ const mobileAnimations = () => {
         end: 0.87,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     })
     .to('.rain-path', { opacity: 1, duration: 0.1 }, '<')
     .to('.rain-path', { yPercent: 0, duration: 0.8 }, '<')
@@ -205,8 +206,8 @@ const mobileAnimations = () => {
         end: 1,
         autoRotate: false,
       },
-      ease: 'none',
-      duration: 1,
+      ease: 'power1.out',
+      // duration: 1,
     })
     .to('.snow-path', { opacity: 1, duration: 0.1 }, '<')
     .to('.snow-path', { yPercent: 0, duration: 0.8 }, '<')
@@ -374,27 +375,35 @@ function bindScrollToLabels(triggerElem, startLabel, endLabel, config = {}) {
     { time: startTime },
     {
       time: endTime,
-      ease: "none",
+      ease: "power1.out",
       scrollTrigger: {
         trigger: triggerElem,
-        start: config.start || "top center",
-        end: config.end || "center top",
-        scrub: config.scrub ?? 3,
+        start: config.start || "top center+=10",
+        end: config.end || "bottom center",
+        scrub: config.scrub ?? .5,
         invalidateOnRefresh: true,
-        markers: config.markers || false
+        markers: config.markers || true
       }
     }
   );
 }
-
+// === note for the time line to workseamlessly on this animation -- check that the start and end for the viewport are the same (Eg: center center
+// === check that the next animation start point is after the end point of the previuse one -visually- set low scrub and ease that starts fast end slow or none)
 // 1. Sun ScrollTrigger
-bindScrollToLabels(allFeatures[0], "sunStart", "sunEnd");
+bindScrollToLabels(allFeatures[0], "sunStart", "sunEnd",{
+   end: "bottom+=110 center",
+  
+});
 
 // 2. Cloudy Sun ScrollTrigger
-bindScrollToLabels(allFeatures[1], "cloudySunStart", "cloudySunEnd");
+bindScrollToLabels(allFeatures[1], "cloudySunStart", "cloudySunEnd",{
+   end: "bottom+=250 center",
+});
 
 // 3. Cloudy ScrollTrigger
-bindScrollToLabels(allFeatures[2], "cloudyStart", "cloudyEnd");
+bindScrollToLabels(allFeatures[2], "cloudyStart", "cloudyEnd",{
+     end: "bottom+=250 center",
+});
 
 const bgFade = gsap.to('.cloudy-bg',{
   opacity:1,
@@ -408,8 +417,8 @@ const bgFade = gsap.to('.cloudy-bg',{
 
 // 4. Rainy ScrollTrigger
 bindScrollToLabels(allFeatures[3], "rainyStart", "rainyEnd", {
-  start: "top-=60 60%",
-  end: "center 40%",
+ 
+  end: "bottom+=250 center",
 });
           // rainyTl.to('#rain-lottie-container',{
           //   opacity:0,

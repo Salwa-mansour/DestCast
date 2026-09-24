@@ -27,6 +27,7 @@ function Nav() {
           duration: 0.5,
           ease: 'power3.out',
         })
+        .to('.toggle-nav',{position:'fixed',duration:.05},'<')
           .to(
             '#line-2',
             {
