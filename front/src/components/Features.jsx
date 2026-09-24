@@ -117,7 +117,7 @@ const mobileAnimations = () => {
       // pin: true,                  // 👈 Pinning keeps the sequence on screen longer
       scrub: 1,                   // 👈 Slightly higher scrub smoothing
       invalidateOnRefresh: true,
-      markers: true
+    //  markers: true
     },
   });
 
