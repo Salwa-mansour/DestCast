@@ -1,7 +1,7 @@
 .back-link{
     position: absolute;
     top: 70px;
-    left: 10px;
+    inset-inline-start: 10px;
     z-index: 1;
     width: 30px;
     height: 30px;
@@ -14,6 +14,7 @@
     position: absolute;
     top: 0;
     left: 0;
+   
       width: 100%;
     height: 100%;
     object-fit: contain;
@@ -271,7 +272,8 @@ figure img{
   line-height: 1.2;
 }
 .inputText{
-  font-size: 1rem;
+  font-size: .9rem;
+  white-space: nowrap;
 }
 /* Loading & Error States */
 .weather-message {
@@ -425,7 +427,8 @@ figure img{
     width: 20rem;
    }
    .date-text{
-    width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
    }
    .weather-summary-wrapper{
     width: 80vw;
@@ -484,6 +487,7 @@ figure img{
    }
 
    .weather-inline-wrapper {
+        padding-top: 2rem;
         max-height: calc(100vh - 2rem); /* Constrain inner content height instead */
         display: flex;
         flex-direction: column;
