@@ -4,6 +4,7 @@ import { client } from '../sanity/sanityClient';
 import { urlFor } from '../utils/urlFor';
 import { usePageMetadata } from '../hooks/usePageMetadata';
 import { Helmet } from 'react-helmet-async';
+import ProgressiveImage from '../components/ProgressiveImage';
 
 export interface Post {
   _id: string;
@@ -138,11 +139,9 @@ client
       <header className="page-header">
         <figure className="header-img" tabIndex={-1}>
           {pageMetaData?.headerImage && pageMetaData?.headerImage.asset && (
-            <img
-              src={urlFor(pageMetaData?.headerImage?.asset).width(1200).height(600).url()}
-              alt={pageMetaData.title || 'Posts Header'}
-            />
-            
+         
+             <ProgressiveImage imageObject={pageMetaData?.headerImage} isPrior={true} alt='posts header img' />
+              
           )}
           <figcaption 
             className="image-attribution"
@@ -168,10 +167,11 @@ client
             <article key={post._id} className="item-card">
               <figure className="post-img">
                 {post.mainImage && post.mainImage.asset && (
-                  <img
-                    src={urlFor(post.mainImage).width(800).height(600).url()}
-                    alt={post.title}
-                  />
+                  // <img
+                  //   src={urlFor(post.mainImage).width(600).url()}
+                  //   alt={post.title}
+                  // />
+                  <ProgressiveImage imageObject={post.mainImage} alt={post.title} width='600' />
                 )}
               </figure>
               <div className="card-info">

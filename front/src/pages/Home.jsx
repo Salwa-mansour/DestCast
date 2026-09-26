@@ -8,6 +8,7 @@ import '../css/home.css'
 import Features from '../components/Features'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import ProgressiveImage from '../components/ProgressiveImage'
 
 // Register plugins outside the component
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -27,6 +28,9 @@ export default function Home() {
     const query = `{
       "home": *[_type == "home"][0]{
         ...,
+         heroImage {
+          asset,
+        },
         "featuresList": featuresList[]{
           ...,
           "heading": coalesce(heading, linkedPost->title),
@@ -146,11 +150,9 @@ export default function Home() {
       <div ref={containerRef}>
         <section className="hero">
           <div className="hero-image-wrapper">
-            <img
-              className="hero-image"
-              src={heroImageSrc}
-              alt="Hero background visual"
-            />
+            {homeData &&
+              <ProgressiveImage  imageObject={homeData.heroImage} alt={'Hero background visual'} isPrior={true} classNames={'hero-image'}/>
+            }
 
             <div className="sun-glow-wrapper">
               <div className="sun-shine"></div>
